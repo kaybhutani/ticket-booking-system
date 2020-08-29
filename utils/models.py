@@ -1,29 +1,42 @@
-from flask_restx import fields
+from flask_restx import fields, reqparse
 
-bookTicketModel = api.model('Ticket', {
-    'phoneNumber': fields.Integer('Phone number.'),
-    'userName': fields.String('User Name'),
-    'timestamp': fields.String('Timing of show as timestamp')
-  })
+class RequestModels:
 
-UpdateTimingModel = api.model('UpdateTiming', {
-  'currentTime': fields.String("Timestamp of current show timing"),
-  'newTime': fields.String("Timestamp of new show timing")
-  })
+  def __init__(self, api):
+    self.api = api
 
-ViewAllTicketModel = api.model('ViewAllTickets', {
-  'movieId': fields.String('Unique ID of Movie')
-  })
+  def BookTicketModel(self):
+    return self.api.model('Ticket', {
+      'phoneNumber': fields.Integer('Phone number.'),
+      'userName': fields.String('User Name'),
+      'timestamp': fields.String('Timing of show as timestamp')
+    })
 
-DeleteTicketModel = api.model('DeleteTicket', {
-  'ticketId': fields.String('Unique ID of Ticket')
-  })
+  def UpdateTimingModel(self):
+    return self.api.model('UpdateTiming', {
+      'currentTime': fields.String("Timestamp of current show timing"),
+      'newTime': fields.String("Timestamp of new show timing")
+      })
 
-UserDetailsModel = api.model('UserDetails', {
-  'ticketId': fields.String('Unique ID of Ticket')
-  })
+  # GET Methods parser models
 
-MarkTicketExpireModel = api.model('MarkExpire', {
-  'ticketId': fields.String('Unique ID of Ticket')
-  })
-z
+  def ViewAllTicketModel(self):
+    model = reqparse.RequestParser()
+    model.add_argument('movieId', help='Unique Movie ID', required=True)
+    return model
+  
+  def UserDetailsModel(self):
+    model = reqparse.RequestParser()
+    model.add_argument('ticketId', help='Unique Ticket ID', required=True)
+    return model
+
+
+  def DeleteTicketModel(self):
+    return self.api.model('DeleteTicket', {
+    'ticketId': fields.String('Unique ID of Ticket')
+    })
+
+  def MarkTicketExpireModel(self):
+    return self.api.model('MarkExpire', {
+    'ticketId': fields.String('Unique ID of Ticket')
+    })

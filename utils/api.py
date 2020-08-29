@@ -1,9 +1,16 @@
+from flask import (
+  request
+)
+
 from flask_restx import (
   Api,
   fields,
   Namespace,
-  Resource
+  Resource,
+  reqparse
 )
+
+from utils.models import RequestModels
 
 # set apiAuth to False if you want to test without auth-token
 apiAuth = False
@@ -11,18 +18,20 @@ xAuthToken = '123xyz'
 
 api = Namespace('api', description='Booking and Tickets related methods.')
 
+# importing all request models
+RequestModel = RequestModels(api)
+BookTicketModel = RequestModel.BookTicketModel()
+UpdateTimingModel = RequestModel.UpdateTimingModel()
+ViewAllTicketModel = RequestModel.ViewAllTicketModel()
+UserDetailsModel = RequestModel.UserDetailsModel()
+DeleteTicketModel = RequestModel.DeleteTicketModel()
+MarkTicketExpireModel = RequestModel.MarkTicketExpireModel()
 
-bookTicketModel = api.model('Ticket', {'phoneNumber': fields.Integer('Phone number.'), 'userName': fields.String('User Name'), 'timestamp': fields.String('Timing of show as timestamp')})
-UpdateTimingModel = api.model('UpdateTiming', {'currentTime': fields.String("Timestamp of current show timing"), 'newTime': fields.String("Timestamp of new show timing")})
-ViewAllTicketModel = api.model('ViewAllTickets', {'movieId': fields.String('Unique ID of Movie')})
-DeleteTicketModel = api.model('DeleteTicket', {'ticketId': fields.String('Unique ID of Ticket')})
-UserDetailsModel = api.model('UserDetails', {'ticketId': fields.String('Unique ID of Ticket')})
-MarkTicketExpireModel = api.model('MarkExpire', {'ticketId': fields.String('Unique ID of Ticket')})
 
 @api.route('/book-ticket')
 class BookTicket(Resource):
-
-  @api.expect(bookTicketModel)
+  
+  @api.expect(BookTicketModel)
   def post(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
@@ -38,7 +47,7 @@ class BookTicket(Resource):
 class UpdateTiming(Resource):
 
   @api.expect(UpdateTimingModel)
-  def post(self):
+  def put(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -54,7 +63,7 @@ class UpdateTiming(Resource):
 class ViewAllTickets(Resource):
 
   @api.expect(ViewAllTicketModel)
-  def post(self):
+  def get(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -69,7 +78,7 @@ class ViewAllTickets(Resource):
 class DeleteTicket(Resource):
 
   @api.expect(DeleteTicketModel)
-  def post(self):
+  def delete  (self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -84,7 +93,7 @@ class DeleteTicket(Resource):
 class DeleteTicket(Resource):
 
   @api.expect(UserDetailsModel)
-  def post(self):
+  def get(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -99,7 +108,7 @@ class DeleteTicket(Resource):
 class MarkTicketExpire(Resource):
 
   @api.expect(MarkTicketExpireModel)
-  def post(self):
+  def put(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
