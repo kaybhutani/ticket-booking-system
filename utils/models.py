@@ -9,6 +9,7 @@ class RequestModels:
     return self.api.model('Ticket', {
       'phoneNumber': fields.Integer('Phone number.'),
       'userName': fields.String('User Name'),
+      'ticketCount': fields.Integer('Count of movie tickets to book.'),
       'timestamp': fields.String('Timing of show as timestamp')
     })
 

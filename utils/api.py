@@ -12,7 +12,7 @@ from flask_restx import (
 
 from utils.models import RequestModels
 from config import apiAuth, xAuthToken
-from utils.methods import bookTicket
+from utils.methods import bookTicket, deleteTicket
 
 api = Namespace('api', description='Booking and Tickets related methods.')
 
@@ -38,9 +38,8 @@ class BookTicket(Resource):
         return {"success": False, "response": "Invalid Auth token"}, 401
 
     requestBody = request.get_json()
-    bookTicket(requestBody)
-    print(requestBody)
-    return {"success": True}, 200
+    response = bookTicket(requestBody)
+    return response
 
 @api.route('/update-timing')
 class UpdateTiming(Resource):
@@ -85,8 +84,7 @@ class DeleteTicket(Resource):
         return {"success": False, "response": "Invalid Auth token"}, 401
 
     requestBody = request.get_json()
-    print(requestBody)
-    return {"success": True}, 200
+    return deleteTicket(requestBody)
 
 @api.route('/user-details')
 class DeleteTicket(Resource):
