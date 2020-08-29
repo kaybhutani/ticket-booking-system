@@ -11,10 +11,8 @@ from flask_restx import (
 )
 
 from utils.models import RequestModels
-
-# set apiAuth to False if you want to test without auth-token
-apiAuth = False
-xAuthToken = '123xyz'
+from config import apiAuth, xAuthToken
+from utils.methods import bookTicket
 
 api = Namespace('api', description='Booking and Tickets related methods.')
 
@@ -40,6 +38,7 @@ class BookTicket(Resource):
         return {"success": False, "response": "Invalid Auth token"}, 401
 
     requestBody = request.get_json()
+    bookTicket(requestBody)
     print(requestBody)
     return {"success": True}, 200
 
