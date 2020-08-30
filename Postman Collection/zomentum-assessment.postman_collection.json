@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "d7655f73-5bb5-4128-a130-7fda86163852",
+		"name": "zomentum-assessment",
+		"description": "Theatre booking REST API's",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:5000/api/book-ticket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "123xyz",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phoneNumber\": 8802999631,\n  \"userName\": \"test\",\n  \"ticketCount\": 5,\n  \"showTime\": \"2020-08-31 02:45\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/book-ticket",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"book-ticket"
+					]
+				},
+				"description": "Books a ticket. Checks if a movie with same time exists, if not, creates one and sets count to ticketCount. Else updates the ticketCount and creates a new ticket.\n"
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:5000/api/delete-ticket",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ticketId\": \"5f4b92edd68f5875f69add00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/delete-ticket",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"delete-ticket"
+					]
+				},
+				"description": "Deletes the ticket ID if it exists. Also updates the Ticket count for the same movie."
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:5000/api/mark-expire",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ticketId\": \"5f4b9370d68f5875f69add01\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/mark-expire",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"mark-expire"
+					]
+				},
+				"description": "Marks the passed ticket ID expired which will be automatically deleted by MongoDb TTL index."
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:5000/api/update-timing",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"newShowTime\": \"2020-08-31 02:45\",\n  \"ticketId\": \"5f4b9370d68f5875f69add01\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/update-timing",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"update-timing"
+					]
+				},
+				"description": "Updates the ticket time to passed New time. If a show with new time doesn't exists, it creates one."
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:5000/api/user-details?ticketId=5f4b9370d68f5875f69add01",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/user-details?ticketId=5f4b9370d68f5875f69add01",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"user-details"
+					],
+					"query": [
+						{
+							"key": "ticketId",
+							"value": "5f4b9370d68f5875f69add01"
+						}
+					]
+				},
+				"description": "Returns the user details associated with the passed ticket ID."
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:5000/api/view-all-tickets?movieId=5f4b92edd68f5875f69adcff",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/view-all-tickets?movieId=5f4b92edd68f5875f69adcff",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"view-all-tickets"
+					],
+					"query": [
+						{
+							"key": "movieId",
+							"value": "5f4b92edd68f5875f69adcff"
+						}
+					]
+				},
+				"description": "Returns all tickets for the passed Movie ID"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
