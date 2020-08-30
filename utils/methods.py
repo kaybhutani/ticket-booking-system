@@ -1,6 +1,8 @@
 from utils.database import CreateDatabaseClient
 from bson.objectid import ObjectId
 from datetime import datetime
+import dateutil.parser
+
 client = CreateDatabaseClient()
 moviesCollection = client.moviesCollection()
 ticketsCollection = client.ticketsCollection()
@@ -9,7 +11,7 @@ ticketsCollection = client.ticketsCollection()
 def bookTicket(jsonData):
   showTimeString = jsonData['showTime']
   try:
-    showTime = datetime.fromisoformat(showTimeString)
+    showTime = dateutil.parser.parse(showTimeString)
     if showTime < datetime.now():
       return {'succes': False, 'message': 'Show time cannot be before current time.'}
   except Exception as err:
@@ -88,7 +90,7 @@ def updateTicket(jsonData):
 
   showTimeString = jsonData['newShowTime']
   try:
-    showTime = datetime.fromisoformat(showTimeString)
+    showTime = dateutil.parser.parse(showTimeString)
   except Exception as err:
     return {'success': False, 'message': str(err)}, 401
 
