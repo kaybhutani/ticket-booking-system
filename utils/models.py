@@ -15,8 +15,8 @@ class RequestModels:
 
   def UpdateTimingModel(self):
     return self.api.model('UpdateTiming', {
-      'currentTime': fields.String("Timestamp of current show timing"),
-      'newTime': fields.String("Timestamp of new show timing")
+      'newTime': fields.String("Timestamp of new show timing"),
+      'ticketId': fields.String("Unique Ticket ID")
       })
 
   # GET Methods parser models
