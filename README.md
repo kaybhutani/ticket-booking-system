@@ -16,6 +16,30 @@ If you want to use authentications for all of the endpoints, you can set `apiAut
 
 use `flask run` to start a server at port 5000
 
+## API endpoints and functionalities
+
+- #### Endpoint to Book ticket
+    `/api/book-ticket`  can be used to Book a ticket. If the Movie for passed show timing doesn't exists, it creates a new Movie in Movies Collection.
+    Before booking the ticket, it checks for `ticketCount` which cannot exceed 20.  
+- #### Update timing of ticket
+    `api/update-timing` can be used to update the timing of ticket.
+
+- #### View All tickets
+    `/api/view-all-tickets` can be used to view all tickets booked for a movie. Either `showTiming` or `movieId` any of these can be used to check all tickets for a particular movie.
+
+- #### Delete a ticket
+    `/api/delete-ticket` can be used to delete a ticket using it's `ticketId`
+
+- #### View User Details associated with a ticket
+    `/api/user-details` can be used to see details of the user who booked the ticket using `ticketId`
+
+- #### Mark Ticket Expired after 8 hours and Deletion
+    This part is being handled by MongoDb **TTL index** that sets Time to live for each document. Since mongodb checks for UTC Time, the `expireAfter` time for each documents is set to 2.5 hours (8 - 5.5) since IST is ahead by 5.5 hours.
+    MongoDb automatically checks for expired tickets every 1 minute and deletes the one whose `showTiming` is more than current time.
+
+
+
+
 ## Testing
 
 Manual Testing can be done using the Swagger UI or Postman. For automated Unit testing, run `python test_api.py`.
@@ -28,19 +52,20 @@ To test any api, select it in the swagger UI as shown in the screenshot and clic
 
 
 To test the API and send data, Edit the values after clicking `Try it now` and enter the payload data. Once done, click `Execute` to do the request as shown in screenshot.
-[!alt text](assets/1.png)
-[!alt text](assets/2.png)
+![Swagger UI](assets/1.png)
+
+![API payload](assets/2.png)
 
 The `Response body, header` and `Status code` can be seen just below it.
 
-[!alt text](assets/3.png)
+![API Response](assets/3.png)
 
 ### Testing through postman
 
 For testing through postman, you can use this [link](https://www.getpostman.com/collections/1dd9f6ca302b465f5cfd) or use the JSON file in `Postman Collection` directory.
 
 Sample Payload and response for few endpoints is shown below.
-[!alt text](assets/4.png)
-[!alt text](assets/5.png)
+![Postman 1](assets/4.png)
+![Postman 2](assets/5.png)
 
 
