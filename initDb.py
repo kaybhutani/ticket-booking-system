@@ -1,6 +1,10 @@
 import pymongo
 from config import  mongoUri
 
+# Run to generate TTL indexes for your Database
+# use only if you are using your own mongodb instance
+
+
 if __name__=='__main__':
   client = pymongo.MongoClient(mongoUri, connectTimeoutMS=50000)
   database = client.zomentum
