@@ -3,16 +3,13 @@ from flask import (
 )
 
 from flask_restx import (
-  Api,
-  fields,
   Namespace,
   Resource,
-  reqparse
 )
 
 from utils.models import RequestModels
 from config import apiAuth, xAuthToken
-from utils.methods import bookTicket, deleteTicket, getAllTickets, getUserDetails, updateTicket
+from utils.methods import bookTicket, deleteTicket, getAllTickets, getUserDetails, expireTicket,updateTicket
 
 api = Namespace('api', description='Booking and Tickets related methods.')
 
@@ -30,7 +27,7 @@ MarkTicketExpireModel = RequestModel.MarkTicketExpireModel()
 class BookTicket(Resource):
 
   @api.expect(BookTicketModel)
-  def post(self):
+  def put(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -46,7 +43,7 @@ class BookTicket(Resource):
 class UpdateTiming(Resource):
 
   @api.expect(UpdateTimingModel)
-  def put(self):
+  def post(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -105,7 +102,7 @@ class UserDetails(Resource):
 class MarkTicketExpire(Resource):
 
   @api.expect(MarkTicketExpireModel)
-  def put(self):
+  def post(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -113,5 +110,4 @@ class MarkTicketExpire(Resource):
         return {"success": False, "response": "Invalid Auth token"}, 401
 
     requestBody = request.get_json()
-    print(requestBody)
-    return {"success": True}, 200
+    return expireTicket(requestBody.get('ticketId'))

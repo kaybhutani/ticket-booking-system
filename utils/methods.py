@@ -1,31 +1,40 @@
 from utils.database import CreateDatabaseClient
 from bson.objectid import ObjectId
-
+from datetime import datetime
 client = CreateDatabaseClient()
 moviesCollection = client.moviesCollection()
 ticketsCollection = client.ticketsCollection()
 
 
 def bookTicket(jsonData):
-  result = moviesCollection.find_one({'timestamp': jsonData.get('timestamp')})
+  showTimeString = jsonData['showTime']
+  try:
+    showTime = datetime.fromisoformat(showTimeString)
+    if showTime < datetime.now():
+      return {'succes': False, 'message': 'Show time cannot be before current time.'}
+  except Exception as err:
+    return {'success': False, 'message': str(err)}, 401
 
+  result = moviesCollection.find_one({'showTime': showTime})
   if not result:
-    moviesCollection.insert_one({"timestamp": jsonData.get('timestamp'), 'ticketCount': 0})
-    result = moviesCollection.find_one({'timestamp': jsonData.get('timestamp')})
-
+    moviesCollection.insert_one({"showTime": showTime, 'ticketCount': 0})
+    result = moviesCollection.find_one({'showTime': showTime})
   newTicketCount = result.get('ticketCount') + jsonData.get('ticketCount')
-  print(newTicketCount)
   if newTicketCount > 20:
     return {'success': False, 'message': 'Ticket limit exceeded.'}, 201
 
   jsonData['movieId'] = result['_id']
+  jsonData['showTime'] = showTime
   response = ticketsCollection.insert_one(jsonData)
+
+  # updating count of sold tickets
   moviesCollection.update_one({"_id": result['_id']}, {"$set": {
     "ticketCount": newTicketCount
   }})
   jsonData['movieId'] = str(jsonData['movieId'])
   jsonData['ticketId'] = str(response.inserted_id)
   jsonData.pop('_id')
+  jsonData['showTime'] = str(showTime)
   return {'success': True, 'data': jsonData}
 
 
@@ -54,7 +63,7 @@ def getUserDetails(ticketId):
   res.pop('_id')
   res.pop('movieId')
   res.pop('ticketCount')
-  res.pop('timestamp')
+  res.pop('showTime')
   return {'success': True, 'userDetails': res}, 200
 
 def getAllTickets(movieId):
@@ -70,9 +79,19 @@ def getAllTickets(movieId):
     ticket['ticketId'] = str(ticket['_id'])
     ticket.pop('_id')
     ticket['movieId'] = str(ticket['movieId'])
-  return {'success': True, 'allTickets': allTickets}, 200
+    ticket.pop('showTime')
+    ticket.pop('movieId')
+
+  return {'success': True, 'movieId': str(res.get('_id')), 'showTime': str(res['showTime']), 'allTickets': allTickets}, 200
 
 def updateTicket(jsonData):
+
+  showTimeString = jsonData['newShowTime']
+  try:
+    showTime = datetime.fromisoformat(showTimeString)
+  except Exception as err:
+    return {'success': False, 'message': str(err)}, 401
+
   ticketId = jsonData.get('ticketId')
   if not ObjectId.is_valid(ticketId):
     return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
@@ -82,6 +101,18 @@ def updateTicket(jsonData):
     return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 400
 
   deleteTicket({'ticketId': ticketId})
-  res['timestamp'] = jsonData['newTime']
+  res['showTime'] = jsonData['newShowTime']
   res.pop('movieId')
   return  bookTicket(res)
+
+def expireTicket(ticketId):
+
+  if not ObjectId.is_valid(ticketId):
+    return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
+  res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
+
+  if not res:
+    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 400
+
+  ticketsCollection.update_one({'_id': ObjectId(ticketId)}, {'$set': {'showTime': datetime.now()}})
+  return  {'success': True, 'message': 'Ticket successfully marked expired.'}, 200
