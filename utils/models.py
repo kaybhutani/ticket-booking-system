@@ -10,12 +10,12 @@ class RequestModels:
       'phoneNumber': fields.Integer('Phone number.'),
       'userName': fields.String('User Name'),
       'ticketCount': fields.Integer('Count of movie tickets to book.'),
-      'showTime': fields.String('Timing of show as in ISO format (YYYY:MM:DD HH:MM:SS)')
+      'showTime': fields.String('Timing of show as in ISO format (YYYY-MM-DD HH:MM:SS)')
     })
 
   def UpdateTimingModel(self):
     return self.api.model('UpdateTiming', {
-      'newShowTime': fields.String("New timing of show as in ISO format(YYYY:MM:DD HH:MM:SS)"),
+      'newShowTime': fields.String("New timing of show as in ISO format(YYYY-MM-DD HH:MM:SS)"),
       'ticketId': fields.String("Unique Ticket ID")
       })
 
