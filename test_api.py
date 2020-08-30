@@ -20,20 +20,26 @@ class ApiTest(unittest.TestCase):
     self.testTicketId = response.json['data']['ticketId']
 
   def test_user_details(self):
-    response = self.app.get('/api/user-details', query_string=dict(ticketId='5f4bce71f5e7364a94a2f97f'))
+    response = self.app.get('/api/user-details', query_string=dict(ticketId='5f4c0d83e24004e8adad2f5c'))
     print(response.json)
     self.assertEqual(response.status_code, 200)
 
   def test_all_tickets(self):
-    response = self.app.get('/api/view-all-tickets', query_string=dict(movieId='5f4bbc04f5ce1f47ceaf2155'))
+    response = self.app.get('/api/view-all-tickets', query_string=dict(movieId='5f4c0d82e24004e8adad2f5b'))
     print(response.json)
     self.assertEqual(response.status_code, 200)
 
   def test_update_time(self):
-    response = self.app.put('/api/update-timing', json=dict(ticketId='5f4bce71f5e7364a94a2f97f', newShowTime=str(datetime.now() + timedelta(hours=5.5))))
+    response = self.app.put('/api/update-timing', json=dict(ticketId='5f4c0d83e24004e8adad2f5c', newShowTime=str(datetime.now() + timedelta(hours=5.5))))
     print(response.json)
     self.assertEqual(response.status_code, 200)
 
+  # uncomment to test delete_ticket method, Will delete TEST ticket from Database.
+
+  # def test_delete_ticket(self):
+  #   response = self.app.delete('/api/delete-ticket', json=dict(ticketId='5f4c0d83e24004e8adad2f5c'))
+  #   print(response.json)
+  #   self.assertEqual(response.status_code, 200)
 if __name__ == "__main__":
   unittest.main()
 
