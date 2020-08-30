@@ -19,19 +19,19 @@ use `flask run` to start a server at port 5000
 ## API endpoints and functionalities
 
 - #### Endpoint to Book ticket
-    `/api/book-ticket`  can be used to Book a ticket. If the Movie for passed show timing doesn't exists, it creates a new Movie in Movies Collection.
+    Post method `/api/book-ticket`  can be used to Book a ticket. If the Movie for passed show timing doesn't exists, it creates a new Movie in Movies Collection.
     Before booking the ticket, it checks for `ticketCount` which cannot exceed 20.  
 - #### Update timing of ticket
-    `api/update-timing` can be used to update the timing of ticket.
+    Put method `api/update-timing` can be used to update the timing of ticket.
 
 - #### View All tickets
-    `/api/view-all-tickets` can be used to view all tickets booked for a movie. Either `showTiming` or `movieId` any of these can be used to check all tickets for a particular movie.
+    Get method `/api/view-all-tickets` can be used to view all tickets booked for a movie. Either `showTiming` or `movieId` any of these can be used to check all tickets for a particular movie.
 
 - #### Delete a ticket
-    `/api/delete-ticket` can be used to delete a ticket using it's `ticketId`
+    Delete method `/api/delete-ticket` can be used to delete a ticket using it's `ticketId`
 
 - #### View User Details associated with a ticket
-    `/api/user-details` can be used to see details of the user who booked the ticket using `ticketId`
+    Get method `/api/user-details` can be used to see details of the user who booked the ticket using `ticketId`
 
 - #### Mark Ticket Expired after 8 hours and Deletion
     This part is being handled by MongoDb **TTL index** that sets Time to live for each document. Since mongodb checks for UTC Time, the `expireAfter` time for each documents is set to 2.5 hours (8 - 5.5) since IST is ahead by 5.5 hours.
