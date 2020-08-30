@@ -1,6 +1,6 @@
 from utils.database import CreateDatabaseClient
 from bson.objectid import ObjectId
-from datetime import datetime
+from datetime import datetime, timedelta
 import dateutil.parser
 
 client = CreateDatabaseClient()
@@ -12,7 +12,7 @@ def bookTicket(jsonData):
   showTimeString = jsonData['showTime']
   try:
     showTime = dateutil.parser.parse(showTimeString)
-    if showTime < datetime.now():
+    if showTime < datetime.utcnow() + timedelta(hours=5.5):  # converting to IST Time
       return {'succes': False, 'message': 'Show time cannot be before current time.'}
   except Exception as err:
     return {'success': False, 'message': str(err)}, 401
@@ -68,6 +68,7 @@ def getUserDetails(ticketId):
   res.pop('showTime')
   return {'success': True, 'userDetails': res}, 200
 
+
 def getAllTickets(movieId):
   if not ObjectId.is_valid(movieId):
     return {'success': False, 'message': 'Movie ID is not valid.'}, 401
@@ -84,10 +85,11 @@ def getAllTickets(movieId):
     ticket.pop('showTime')
     ticket.pop('movieId')
 
-  return {'success': True, 'movieId': str(res.get('_id')), 'showTime': str(res['showTime']), 'allTickets': allTickets}, 200
+  return {'success': True, 'movieId': str(res.get('_id')), 'showTime': str(res['showTime']),
+          'allTickets': allTickets}, 200
+
 
 def updateTicket(jsonData):
-
   showTimeString = jsonData['newShowTime']
   try:
     showTime = dateutil.parser.parse(showTimeString)
@@ -105,10 +107,10 @@ def updateTicket(jsonData):
   deleteTicket({'ticketId': ticketId})
   res['showTime'] = jsonData['newShowTime']
   res.pop('movieId')
-  return  bookTicket(res)
+  return bookTicket(res)
+
 
 def expireTicket(ticketId):
-
   if not ObjectId.is_valid(ticketId):
     return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
@@ -116,5 +118,5 @@ def expireTicket(ticketId):
   if not res:
     return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 404
 
-  ticketsCollection.update_one({'_id': ObjectId(ticketId)}, {'$set': {'showTime': datetime.now()}})
-  return  {'success': True, 'message': 'Ticket successfully marked expired.'}, 200
+  ticketsCollection.update_one({'_id': ObjectId(ticketId)}, {'$set': {'showTime': datetime.utcnow()}})
+  return {'success': True, 'message': 'Ticket successfully marked expired.'}, 200
