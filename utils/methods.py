@@ -10,14 +10,19 @@ ticketsCollection = client.ticketsCollection()
 
 def bookTicket(jsonData):
   showTimeString = jsonData.get('showTime')
-  if not (jsonData.get('phoneNumber') and jsonData.get('userName')):
-    return
+  if not jsonData.get('phoneNumber'):
+    return {'success': False, 'message': 'Phone number cannot be null.'},406
+  if not jsonData.get('userName'):
+    return {'success': False, 'message': 'userName cannot be null.'}, 406
+  if not jsonData.get('ticketCount'):
+    return {'success': False, 'message': 'Please provide a valid ticket count'}, 406
+
   try:
     showTime = dateutil.parser.parse(showTimeString)
     if showTime < datetime.utcnow() + timedelta(hours=5.5):  # converting to IST Time
-      return {'succes': False, 'message': 'Show time cannot be before current time.'}, 400
+      return {'success': False, 'message': 'Show time cannot be before current time.'}, 400
   except Exception as err:
-    return {'success': False, 'message': str(err)}, 401
+    return {'success': False, 'message': str(err)}, 406
 
   result = moviesCollection.find_one({'showTime': showTime})
   if not result:
@@ -25,7 +30,7 @@ def bookTicket(jsonData):
     result = moviesCollection.find_one({'showTime': showTime})
   newTicketCount = result.get('ticketCount') + jsonData.get('ticketCount')
   if newTicketCount > 20:
-    return {'success': False, 'message': 'Ticket limit exceeded.'}, 201
+    return {'success': False, 'message': 'Ticket limit exceeded.'}, 406
 
   jsonData['movieId'] = result['_id']
   jsonData['showTime'] = showTime
@@ -45,7 +50,7 @@ def bookTicket(jsonData):
 def deleteTicket(jsonData):
   ticketId = jsonData.get('ticketId')
   if not ObjectId.is_valid(ticketId):
-    return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
+    return {'success': False, 'message': 'Ticket ID is not valid.'}, 406
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
   if not res:
     return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 404
@@ -59,7 +64,7 @@ def deleteTicket(jsonData):
 
 def getUserDetails(ticketId):
   if not ObjectId.is_valid(ticketId):
-    return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
+    return {'success': False, 'message': 'Ticket ID is not valid.'}, 406
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
 
   if not res:
@@ -76,12 +81,12 @@ def getAllTickets(movieId, showTimeString):
     try:
       showTime = dateutil.parser.parse(showTimeString)
     except Exception as err:
-      return {'success': False, 'message': str(err)}, 401
+      return {'success': False, 'message': str(err)}, 406
     res = moviesCollection.find_one({'showTime': showTime})
     allTickets = list(ticketsCollection.find({'showTime': showTime}))
   else:
     if not ObjectId.is_valid(movieId):
-      return {'success': False, 'message': 'Movie ID is not valid.'}, 401
+      return {'success': False, 'message': 'Movie ID is not valid.'}, 406
     res = moviesCollection.find_one({'_id': ObjectId(movieId)})
 
     if not res:
@@ -106,11 +111,11 @@ def updateTicket(jsonData):
   try:
     showTime = dateutil.parser.parse(showTimeString)
   except Exception as err:
-    return {'success': False, 'message': str(err)}, 401
+    return {'success': False, 'message': str(err)}, 406
 
   ticketId = jsonData.get('ticketId')
   if not ObjectId.is_valid(ticketId):
-    return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
+    return {'success': False, 'message': 'Ticket ID is not valid.'}, 406
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
 
   if not res:
