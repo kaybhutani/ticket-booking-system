@@ -36,8 +36,3 @@ class RequestModels:
     return self.api.model('DeleteTicket', {
     'ticketId': fields.String('Unique ID of Ticket')
     })
-
-  def MarkTicketExpireModel(self):
-    return self.api.model('MarkExpire', {
-    'ticketId': fields.String('Unique ID of Ticket')
-    })

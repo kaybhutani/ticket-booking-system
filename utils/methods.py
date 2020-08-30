@@ -9,11 +9,13 @@ ticketsCollection = client.ticketsCollection()
 
 
 def bookTicket(jsonData):
-  showTimeString = jsonData['showTime']
+  showTimeString = jsonData.get('showTime')
+  if not (jsonData.get('phoneNumber') and jsonData.get('userName')):
+    return
   try:
     showTime = dateutil.parser.parse(showTimeString)
     if showTime < datetime.utcnow() + timedelta(hours=5.5):  # converting to IST Time
-      return {'succes': False, 'message': 'Show time cannot be before current time.'}
+      return {'succes': False, 'message': 'Show time cannot be before current time.'}, 400
   except Exception as err:
     return {'success': False, 'message': str(err)}, 401
 
@@ -90,7 +92,7 @@ def getAllTickets(movieId):
 
 
 def updateTicket(jsonData):
-  showTimeString = jsonData['newShowTime']
+  showTimeString = jsonData.get('newShowTime')
   try:
     showTime = dateutil.parser.parse(showTimeString)
   except Exception as err:
@@ -109,14 +111,3 @@ def updateTicket(jsonData):
   res.pop('movieId')
   return bookTicket(res)
 
-
-def expireTicket(ticketId):
-  if not ObjectId.is_valid(ticketId):
-    return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
-  res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
-
-  if not res:
-    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 404
-
-  ticketsCollection.update_one({'_id': ObjectId(ticketId)}, {'$set': {'showTime': datetime.utcnow()}})
-  return {'success': True, 'message': 'Ticket successfully marked expired.'}, 200
