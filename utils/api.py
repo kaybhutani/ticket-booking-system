@@ -27,7 +27,7 @@ MarkTicketExpireModel = RequestModel.MarkTicketExpireModel()
 class BookTicket(Resource):
 
   @api.expect(BookTicketModel)
-  def put(self):
+  def post(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -43,7 +43,7 @@ class BookTicket(Resource):
 class UpdateTiming(Resource):
 
   @api.expect(UpdateTimingModel)
-  def post(self):
+  def put(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -102,7 +102,7 @@ class UserDetails(Resource):
 class MarkTicketExpire(Resource):
 
   @api.expect(MarkTicketExpireModel)
-  def post(self):
+  def put(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
