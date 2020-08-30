@@ -44,7 +44,7 @@ def deleteTicket(jsonData):
     return {'success': False, 'message': 'Ticket ID is not valid.'}, 401
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
   if not res:
-    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 400
+    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 404
   ticketsCollection.delete_one({'_id': ObjectId(ticketId)})
   moviesCollection.update_one({'_id': ObjectId(res['movieId'])}, {"$inc": {
     "ticketCount": -res['ticketCount']
@@ -59,7 +59,7 @@ def getUserDetails(ticketId):
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
 
   if not res:
-    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 400
+    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 404
   res.pop('_id')
   res.pop('movieId')
   res.pop('ticketCount')
@@ -72,7 +72,7 @@ def getAllTickets(movieId):
   res = moviesCollection.find_one({'_id': ObjectId(movieId)})
 
   if not res:
-    return {'success': False, 'message': 'Movie ID does not exist in Database.'}, 400
+    return {'success': False, 'message': 'Movie ID does not exist in Database.'}, 404
   allTickets = list(ticketsCollection.find({'movieId': ObjectId(movieId)}))
 
   for ticket in allTickets:
@@ -98,7 +98,7 @@ def updateTicket(jsonData):
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
 
   if not res:
-    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 400
+    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 404
 
   deleteTicket({'ticketId': ticketId})
   res['showTime'] = jsonData['newShowTime']
@@ -112,7 +112,7 @@ def expireTicket(ticketId):
   res = ticketsCollection.find_one({'_id': ObjectId(ticketId)})
 
   if not res:
-    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 400
+    return {'success': False, 'message': 'Ticket ID does not exist in Database.'}, 404
 
   ticketsCollection.update_one({'_id': ObjectId(ticketId)}, {'$set': {'showTime': datetime.now()}})
   return  {'success': True, 'message': 'Ticket successfully marked expired.'}, 200
