@@ -1,4 +1,4 @@
-# zomentum-assessment - REST API's for ticket booking system
+# Zomentum Assessment - REST API's for ticket booking system
 
 ## Deployed version - https://zomentum-task.herokuapp.com/
 
@@ -14,6 +14,7 @@ If you are using local MongoDb instance, you have to run for the very first time
 
 If you want to use authentications for all of the endpoints, you can set `apiAuth` to `True` in `config.py`. Now all of the endpoints will require the `X-Auth-Token` in their headers.
 
+use `flask run` to start a server at port 5000
 
 ## Testing
 
@@ -27,18 +28,19 @@ To test any api, select it in the swagger UI as shown in the screenshot and clic
 
 
 To test the API and send data, Edit the values after clicking `Try it now` and enter the payload data. Once done, click `Execute` to do the request as shown in screenshot.
-
+[!alt text](assets/1.png)
+[!alt text](assets/2.png)
 
 The `Response body, header` and `Status code` can be seen just below it.
 
-
+[!alt text](assets/3.png)
 
 ### Testing through postman
 
-For testing through postman, you can use this (link)[https://www.getpostman.com/collections/1dd9f6ca302b465f5cfd] or use the JSON file in `Postman Collection` directory.
+For testing through postman, you can use this [link](https://www.getpostman.com/collections/1dd9f6ca302b465f5cfd) or use the JSON file in `Postman Collection` directory.
 
 Sample Payload and response for few endpoints is shown below.
-
-
+[!alt text](assets/4.png)
+[!alt text](assets/5.png)
 
 
