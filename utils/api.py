@@ -12,7 +12,7 @@ from flask_restx import (
 
 from utils.models import RequestModels
 from config import apiAuth, xAuthToken
-from utils.methods import bookTicket, deleteTicket
+from utils.methods import bookTicket, deleteTicket, getUserDetails
 
 api = Namespace('api', description='Booking and Tickets related methods.')
 
@@ -28,7 +28,7 @@ MarkTicketExpireModel = RequestModel.MarkTicketExpireModel()
 
 @api.route('/book-ticket')
 class BookTicket(Resource):
-  
+
   @api.expect(BookTicketModel)
   def post(self):
     # executed only if apiAuth is set True
@@ -40,6 +40,7 @@ class BookTicket(Resource):
     requestBody = request.get_json()
     response = bookTicket(requestBody)
     return response
+
 
 @api.route('/update-timing')
 class UpdateTiming(Resource):
@@ -72,11 +73,12 @@ class ViewAllTickets(Resource):
     print(requestBody)
     return {"success": True}, 200
 
+
 @api.route('/delete-ticket')
 class DeleteTicket(Resource):
 
   @api.expect(DeleteTicketModel)
-  def delete  (self):
+  def delete(self):
     # executed only if apiAuth is set True
     # checks for Api key (X-Auth-Token in header)
     if apiAuth:
@@ -85,6 +87,7 @@ class DeleteTicket(Resource):
 
     requestBody = request.get_json()
     return deleteTicket(requestBody)
+
 
 @api.route('/user-details')
 class DeleteTicket(Resource):
@@ -97,9 +100,9 @@ class DeleteTicket(Resource):
       if not request.headers.get('X-Auth-Token') == xAuthToken:
         return {"success": False, "response": "Invalid Auth token"}, 401
 
-    requestBody = request.get_json()
-    print(requestBody)
-    return {"success": True}, 200
+    ticketId = UserDetailsModel.parse_args()['ticketId']
+    return getUserDetails(ticketId)
+
 
 @api.route('/mark-expire')
 class MarkTicketExpire(Resource):
