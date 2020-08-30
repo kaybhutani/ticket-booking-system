@@ -1,20 +1,22 @@
-# Zomentum Assessment - REST API's for ticket booking system
+# REST API's for ticket booking system
 
-## Deployed version - https://zomentum-task.herokuapp.com/
+### Deployed version - https://zomentum-task.herokuapp.com/
 
 ## Installation
 
-The rest API's are built using Python, Flask, flask_restx and MongoDb. To set up the project locally, follow the steps below
+The rest API's are built using 
+- Python
+- Flask and flask_restx
+- MongoDb
+ 
+ To set up the project locally, follow the steps below.
 
-Set up a virtual environment using `virtualenv .venv` and start it using `source .venv/bin/activate`
-
-Once that is done, use `pip install -r requirements.txt` to install all of the dependencies. If you want to use your own local MongoDb instance, you can replace the testing database URI with yours in `config.py`.
-
-If you are using local MongoDb instance, you have to run for the very first time `initDb.py` using `Python initDb.py` to initialize collections and TTL Indexes for Auto deletions of expired documents. The testing Database already has this step done.
-
-If you want to use authentications for all of the endpoints, you can set `apiAuth` to `True` in `config.py`. Now all of the endpoints will require the `X-Auth-Token` in their headers.
-
-use `flask run` to start a server at port 5000
+- Set up a virtual environment using `virtualenv .venv` and start it using `source .venv/bin/activate`
+- Once that is done, use `pip install -r requirements.txt` to install all of the dependencies.
+- (optional) If you want to use your own local MongoDb instance, you can replace the testing database URI with yours in `config.py`.
+- (optional) If you are using local MongoDb instance, you have to run for the very first time `initDb.py` using `Python initDb.py` to initialize collections and TTL Indexes for Auto deletions of expired documents. The testing Database already has this step done.
+- (optional) If you want to use authentications for all of the endpoints, you can set `apiAuth` to `True` in `config.py`. Now all of the endpoints will require the `X-Auth-Token` in their headers.
+- Use `flask run` to start a server at port 5000
 
 ## API endpoints and functionalities
 
@@ -28,7 +30,7 @@ use `flask run` to start a server at port 5000
     Get method `/api/view-all-tickets` can be used to view all tickets booked for a movie. Either `showTiming` or `movieId` any of these can be used to check all tickets for a particular movie.
 
 - #### Delete a ticket
-    Delete method `/api/delete-ticket` can be used to delete a ticket using it's `ticketId`
+    Put method `/api/delete-ticket` can be used to delete a ticket using it's `ticketId`
 
 - #### View User Details associated with a ticket
     Get method `/api/user-details` can be used to see details of the user who booked the ticket using `ticketId`
@@ -68,4 +70,23 @@ Sample Payload and response for few endpoints is shown below.
 ![Postman 1](assets/4.png)
 ![Postman 2](assets/5.png)
 
+### Database Design
+
+#### Collections
+- movies
+- tickets
+
+#### Document Design
+
+- movies
+    - _id: Unique Movie ID
+    - showTiming: Timing of the Movie
+    - ticketCount: Count of tickets sold for this movie
+- tickets
+    - _id: Unique ticekt ID
+    - movieId: Unique movie id (Reference to document in `movies` Collection)
+    - showTiming: Timing of the Movie
+    - userName: Userame of user
+    - Phone Number: Phone number of user
+    - ticketCount: Count of tickets purchased by the user
 
