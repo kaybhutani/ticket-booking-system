@@ -39,7 +39,64 @@
 				},
 				"description": "Books a ticket. Checks if a movie with same time exists, if not, creates one and sets count to ticketCount. Else updates the ticketCount and creates a new ticket.\n"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "localhost:5000/api/book-ticket",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Auth-Token",
+								"value": "123xyz",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phoneNumber\": 8802999631,\n  \"userName\": \"kayb\",\n  \"ticketCount\": 9,\n  \"showTime\": \"2020-08-30 19:45\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/book-ticket",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"book-ticket"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "271"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.8.2"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Aug 2020 13:35:45 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"data\": {\n        \"phoneNumber\": 8802999631,\n        \"userName\": \"kayb\",\n        \"ticketCount\": 9,\n        \"showTime\": \"2020-08-30 19:45:00\",\n        \"movieId\": \"5f4bab0b43be32a2c66a7597\",\n        \"ticketId\": \"5f4bab3143be32a2c66a759b\"\n    }\n}"
+				}
+			]
 		},
 		{
 			"name": "localhost:5000/api/delete-ticket",
@@ -68,7 +125,58 @@
 				},
 				"description": "Deletes the ticket ID if it exists. Also updates the Ticket count for the same movie."
 			},
-			"response": []
+			"response": [
+				{
+					"name": "localhost:5000/api/delete-ticket",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ticketId\": \"5f4bab3143be32a2c66a759b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/delete-ticket",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"delete-ticket"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "70"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.8.2"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Aug 2020 13:37:00 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"message\": \"Ticket Successfully deleted\"\n}"
+				}
+			]
 		},
 		{
 			"name": "localhost:5000/api/mark-expire",
@@ -152,7 +260,55 @@
 				},
 				"description": "Returns the user details associated with the passed ticket ID."
 			},
-			"response": []
+			"response": [
+				{
+					"name": "localhost:5000/api/user-details?ticketId=5f4b9370d68f5875f69add01",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/user-details?ticketId=5f4bab0b43be32a2c66a7598",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user-details"
+							],
+							"query": [
+								{
+									"key": "ticketId",
+									"value": "5f4bab0b43be32a2c66a7598"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "114"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.8.2"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Aug 2020 13:40:03 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"userDetails\": {\n        \"phoneNumber\": 8802999631,\n        \"userName\": \"test\"\n    }\n}"
+				}
+			]
 		},
 		{
 			"name": "localhost:5000/api/view-all-tickets?movieId=5f4b92edd68f5875f69adcff",
@@ -178,7 +334,55 @@
 				},
 				"description": "Returns all tickets for the passed Movie ID"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "localhost:5000/api/view-all-tickets?movieId=5f4b92edd68f5875f69adcff",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/view-all-tickets?movieId=5f4bab0b43be32a2c66a7597",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"view-all-tickets"
+							],
+							"query": [
+								{
+									"key": "movieId",
+									"value": "5f4bab0b43be32a2c66a7597"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "831"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.8.2"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Aug 2020 13:36:05 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"movieId\": \"5f4bab0b43be32a2c66a7597\",\n    \"showTime\": \"2020-08-30 19:45:00\",\n    \"allTickets\": [\n        {\n            \"phoneNumber\": 8802999631,\n            \"userName\": \"test\",\n            \"ticketCount\": 5,\n            \"ticketId\": \"5f4bab0b43be32a2c66a7598\"\n        },\n        {\n            \"phoneNumber\": 8802999631,\n            \"userName\": \"kartikay\",\n            \"ticketCount\": 4,\n            \"ticketId\": \"5f4bab1a43be32a2c66a7599\"\n        },\n        {\n            \"phoneNumber\": 8802999631,\n            \"userName\": \"sarthak\",\n            \"ticketCount\": 2,\n            \"ticketId\": \"5f4bab2043be32a2c66a759a\"\n        },\n        {\n            \"phoneNumber\": 8802999631,\n            \"userName\": \"kayb\",\n            \"ticketCount\": 9,\n            \"ticketId\": \"5f4bab3143be32a2c66a759b\"\n        }\n    ]\n}"
+				}
+			]
 		}
 	],
 	"protocolProfileBehavior": {}
