@@ -63,8 +63,13 @@ class ViewAllTickets(Resource):
     if apiAuth:
       if not request.headers.get('X-Auth-Token') == xAuthToken:
         return {"success": False, "response": "Invalid Auth token"}, 401
-    movieId = ViewAllTicketModel.parse_args()['movieId']
-    return getAllTickets(movieId)
+
+    movieId = ViewAllTicketModel.parse_args().get('movieId')
+    showTime = ViewAllTicketModel.parse_args().get('showTime')
+
+    if not movieId and not showTime:
+      return {'success': False, 'message': 'Please pass one of the params (movieId or showTime)'}
+    return getAllTickets(movieId, showTime)
 
 
 @api.route('/delete-ticket')

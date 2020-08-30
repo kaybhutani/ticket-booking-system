@@ -23,7 +23,8 @@ class RequestModels:
 
   def ViewAllTicketModel(self):
     model = reqparse.RequestParser()
-    model.add_argument('movieId', help='Unique Movie ID', required=True)
+    model.add_argument('movieId', help='Unique Movie ID')
+    model.add_argument('showTime', help='Show time in ISO format(YYYY-MM-DD HH:MM:SS)')
     return model
   
   def UserDetailsModel(self):

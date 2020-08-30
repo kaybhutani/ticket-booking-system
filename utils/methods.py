@@ -71,14 +71,22 @@ def getUserDetails(ticketId):
   return {'success': True, 'userDetails': res}, 200
 
 
-def getAllTickets(movieId):
-  if not ObjectId.is_valid(movieId):
-    return {'success': False, 'message': 'Movie ID is not valid.'}, 401
-  res = moviesCollection.find_one({'_id': ObjectId(movieId)})
+def getAllTickets(movieId, showTimeString):
+  if showTimeString:
+    try:
+      showTime = dateutil.parser.parse(showTimeString)
+    except Exception as err:
+      return {'success': False, 'message': str(err)}, 401
+    res = moviesCollection.find_one({'showTime': showTime})
+    allTickets = list(ticketsCollection.find({'showTime': showTime}))
+  else:
+    if not ObjectId.is_valid(movieId):
+      return {'success': False, 'message': 'Movie ID is not valid.'}, 401
+    res = moviesCollection.find_one({'_id': ObjectId(movieId)})
 
-  if not res:
-    return {'success': False, 'message': 'Movie ID does not exist in Database.'}, 404
-  allTickets = list(ticketsCollection.find({'movieId': ObjectId(movieId)}))
+    if not res:
+      return {'success': False, 'message': 'Movie ID does not exist in Database.'}, 404
+    allTickets = list(ticketsCollection.find({'movieId': ObjectId(movieId)}))
 
   for ticket in allTickets:
     ticket['ticketId'] = str(ticket['_id'])
@@ -87,6 +95,8 @@ def getAllTickets(movieId):
     ticket.pop('showTime')
     ticket.pop('movieId')
 
+  if not res:
+    return {'success': False, 'message': 'Could not find a movie that match provided details.'}, 404
   return {'success': True, 'movieId': str(res.get('_id')), 'showTime': str(res['showTime']),
           'allTickets': allTickets}, 200
 
