@@ -59,7 +59,7 @@ def deleteTicket(jsonData):
     "ticketCount": -res['ticketCount']
   }})
 
-  return {'success': True, 'message': 'Ticket Successfully deleted'}
+  return {'success': True, 'message': 'Ticket Successfully deleted'}, 200
 
 
 def getUserDetails(ticketId):

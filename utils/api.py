@@ -68,7 +68,7 @@ class ViewAllTickets(Resource):
     showTime = ViewAllTicketModel.parse_args().get('showTime')
 
     if not movieId and not showTime:
-      return {'success': False, 'message': 'Please pass one of the params (movieId or showTime)'}
+      return {'success': False, 'message': 'Please pass one of the params (movieId or showTime)'}, 401
     return getAllTickets(movieId, showTime)
 
 
